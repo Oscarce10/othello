@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.Observable;
 
 public class Tablero extends Observable {
-    public static int VACIO = 0;
-    public static int BLANCA = 1;
-    public static int NEGRA = 2;
-    public static int POSIBLE=3;
+    public final static int VACIO = 0;
+    public final static int BLANCA = 1;
+    public final static int NEGRA = 2;
+    public final static int POSIBLE=3;
+    public final static int AGREGAR = 4;
+    public final static int LIMPIAR = 5;
     private int [][] tableroLogico;
 
     public Tablero() {
@@ -40,20 +42,21 @@ public class Tablero extends Observable {
     }
 
     public void fichasPosibles(int turno){
+        int oponente = (turno==1)?2:1;
         for (int i = 0; i < 8; i++){
             for (int j = 0; j < 8; j++){
-                if(this.tableroLogico [i][j] != turno && this.tableroLogico [i][j] != VACIO){
+                if(this.tableroLogico [i][j] == oponente){
                     if(i-1 >=0){
                         validar(0,-1,i,j, turno,0,1);
                         if(j-1 >=0){
                             validar(-1,-1,i,j,turno,1,1);
                         }
                         if(j+1<=7){
-                            validar(1,-1,i,j,turno,-1,-1);
+                            validar(1,-1,i,j,turno,-1,1);
                         }
                     }
                     if(i+1 <=7){
-                        validar(0,1,i,j,turno,0,1);
+                        validar(0,1,i,j,turno,0,-1);
                         if(j-1 >=0){
                             validar(-1,1,i,j,turno,1,-1);
                         }
@@ -63,7 +66,7 @@ public class Tablero extends Observable {
                     }if(j-1 >= 0){
                         validar(-1,0,i,j, turno,1,0);
                     }
-                    if(j+1 >= 7){
+                    if(j+1 <= 7){
                         validar(1,0,i,j, turno,-1,0);
                     }
 
@@ -100,6 +103,43 @@ public class Tablero extends Observable {
 
 
             }
+    }
+
+    public void agregarFicha(int turno, int fila, int columna){
+        ArrayList <Object> args = new ArrayList<>();
+        limpiaPosibles();
+        this.tableroLogico[fila][columna] = turno;
+        args.add(AGREGAR);
+        args.add(turno);
+        args.add(fila);
+        args.add(columna);
+        this.setChanged();
+        this.notifyObservers(args);
+    }
+
+    public void limpiaPosibles(){
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (tableroLogico[i][j] == POSIBLE){
+                    tableroLogico[i][j] = VACIO;
+                    ArrayList <Object> args = new ArrayList<>();
+                    args.add(LIMPIAR);
+                    args.add(i);
+                    args.add(j);
+                    this.setChanged();
+                    this.notifyObservers(args);
+                }
+            }
+        }
+    }
+
+
+    public int[][] getTableroLogico() {
+        return tableroLogico;
+    }
+
+    public void setTableroLogico(int[][] tableroLogico) {
+        this.tableroLogico = tableroLogico;
     }
 
 }

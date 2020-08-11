@@ -14,6 +14,8 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
+
+import com.example.othello.modelo.Partida;
 import com.example.othello.modelo.Tablero;
 
 import java.util.ArrayList;
@@ -22,7 +24,8 @@ import java.util.Observer;
 
 public class Juego extends AppCompatActivity implements Observer {
     private GridLayout tableroCont;
-    Tablero obT = new Tablero();
+    private Partida obP;
+    private Tablero obT;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -34,6 +37,8 @@ public class Juego extends AppCompatActivity implements Observer {
         display.getSize(size);
         int width = size.x;
         int height = size.y;
+        obT = new Tablero();
+        obP = new Partida(obT);
         this.obT.addObserver(this);
         tableroCont = findViewById(R.id.tableroCont);
         ConstraintLayout tiles [][] = new ConstraintLayout[8][8];
@@ -52,14 +57,21 @@ public class Juego extends AppCompatActivity implements Observer {
                 tiles[i][j].setOnTouchListener(new View.OnTouchListener() {
                     @Override
                     public boolean onTouch(View view, MotionEvent motionEvent) {
-                        Toast.makeText(Juego.this, "i: " + finalI + " j: " + finalJ, Toast.LENGTH_SHORT).show();
-                        return false;
+                        if (obT.getTableroLogico()[finalI][finalJ] == Tablero.POSIBLE){
+                            obT.agregarFicha(obP.getTurno(), finalI, finalJ);
+                            int nuevoTurno = (obP.getTurno()==1)?2:1;
+                            obP.setTurno(nuevoTurno);
+                            obT.fichasPosibles(obP.getTurno());
+                        }
+
+                        return true;
                     }
                 });
             }
         }
+
         obT.inicioTablero();
-        obT.fichasPosibles(1);
+        obT.fichasPosibles(obP.getTurno());
     }
 
     @Override
@@ -67,7 +79,7 @@ public class Juego extends AppCompatActivity implements Observer {
         final ArrayList args = (ArrayList) o;
         int accion = Integer.parseInt(args.get(0).toString());
         switch (accion){
-            case 0:
+            case Partida.INICIO:
                 this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -83,7 +95,7 @@ public class Juego extends AppCompatActivity implements Observer {
                 });
                 break;
 
-            case 1:
+            case Partida.AGREGAR_POSIBLE:
                 this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -91,6 +103,24 @@ public class Juego extends AppCompatActivity implements Observer {
                         tableroCont.getChildAt((Integer.parseInt(args.get(1).toString()) * 8 ) + (Integer.parseInt(args.get(2).toString()))).setBackgroundResource(R.drawable.ficha_posible);
                     }
                 });
+                break;
+
+            case Tablero.AGREGAR:
+                 this.runOnUiThread(new Runnable() {
+                     @Override
+                     public void run() {
+                         if (Integer.parseInt(args.get(1).toString()) == Partida.TURNO_NEGRAS){
+                             tableroCont.getChildAt((Integer.parseInt(args.get(2).toString()) * 8 ) + (Integer.parseInt(args.get(3).toString()))).setBackgroundResource(R.drawable.ficha_negra);
+                         } else {
+                             tableroCont.getChildAt((Integer.parseInt(args.get(2).toString()) * 8 ) + (Integer.parseInt(args.get(3).toString()))).setBackgroundResource(R.drawable.ficha_blanca);
+                         }
+
+                     }
+                 });
+                 break;
+
+            case Tablero.LIMPIAR:
+                tableroCont.getChildAt((Integer.parseInt(args.get(1).toString()) * 8 ) + (Integer.parseInt(args.get(2).toString()))).setBackgroundResource(R.drawable.tile);
                 break;
         }
 
