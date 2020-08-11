@@ -1,6 +1,7 @@
 package com.example.othello.modelo;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 
 public class Tablero extends Observable {
@@ -11,6 +12,7 @@ public class Tablero extends Observable {
     public final static int AGREGAR = 4;
     public final static int LIMPIAR = 5;
     private int [][] tableroLogico;
+    private  ArrayList <Ficha> cambio;
 
     public Tablero() {
         this.tableroLogico = new int[8][8];
@@ -140,6 +142,65 @@ public class Tablero extends Observable {
 
     public void setTableroLogico(int[][] tableroLogico) {
         this.tableroLogico = tableroLogico;
+    }
+
+    public void encerrar(int i, int j, int turno){
+        int oponente = (turno==1)?2:1;
+        if(i-1 >=0){
+            agregarlista(i, j, 0,-1,turno,oponente);
+            if(j-1 >=0){
+                agregarlista(i, j, -1,-1,turno,oponente);
+            }
+            if(j+1<=7){
+                agregarlista(i, j, -1,1,turno,oponente);
+            }
+        }
+        if(i+1 <=7){
+                agregarlista(i, j, 0,1,turno,oponente);
+            if(j-1 >=0){
+                agregarlista(i, j, -1,1,turno,oponente);
+            }
+            if(j+1<=7){
+                agregarlista(i, j, 1,1,turno,oponente);
+            }
+        }if(j-1 >= 0){
+            agregarlista(i, j, -1,0,turno,oponente);
+        }
+        if(j+1 <= 7){
+            agregarlista(i, j, 1,0,turno,oponente);
+        }
+
+
+    }
+
+    public void agregarlista(int i,int j,int x,int y,int turno,int oponente){
+        cambio = new ArrayList<>();
+         boolean exist= true;
+         boolean valido= false;
+        while(exist){
+            if(i+y >=0 && i+y <=7 && j+x >=0 && j+x <=7){
+            if(this.tableroLogico[i+y][j+x]== oponente){
+                cambio.add(new Ficha(i+y,j+x));
+                i=i+y;
+                j=j+x;
+                valido=true;
+            }else if(this.tableroLogico[i+y][j+x]== VACIO){
+                exist= false;
+                valido=false;
+            }else if(this.tableroLogico[i+y][j+x]== turno){
+                exist=false;
+            }
+
+            }else{
+                exist=false;
+                valido=false;
+            }
+        }
+        if(valido){
+            
+        }
+
+
     }
 
 }
