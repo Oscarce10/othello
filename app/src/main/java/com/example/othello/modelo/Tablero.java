@@ -7,6 +7,7 @@ public class Tablero extends Observable {
     public static int VACIO = 0;
     public static int BLANCA = 1;
     public static int NEGRA = 2;
+    public static int POSIBLE=3;
     private int [][] tableroLogico;
 
     public Tablero() {
@@ -41,10 +42,57 @@ public class Tablero extends Observable {
         for (int i = 0; i < 8; i++){
             for (int j = 0; j < 8; j++){
                 if(this.tableroLogico [i][j] != turno && this.tableroLogico [i][j] != VACIO){
-                    if(this.tableroLogico[i - 1][j - 1])
+                    if(i-1 >=0){
+                        validar(0,-1,i,j, turno,0,1);
+                        if(j-1 >=0){
+                            validar(-1,-1,i,j,turno,1,1);
+                        }
+                        if(j+1<=7){
+                            validar(1,-1,i,j,turno,-1,-1);
+                        }
+                    }
+                    if(i+1 <=7){
+                        validar(0,1,i,j,turno,0,1);
+                        if(j-1 >=0){
+                            validar(-1,1,i,j,turno,1,-1);
+                        }
+                        if(j+1<=7){
+                            validar(1,1,i,j,turno,-1,-1);
+                        }
+                    }if(j-1 >= 0){
+                        validar(-1,0,i,j, turno,1,0);
+                    }
+                    if(j+1 >= 7){
+                        validar(1,0,i,j, turno,-1,0);
+                    }
+
                 }
             }
         }
+    }
+
+    public void validar(int x, int y, int i, int j,int turno, int x2, int y2){
+            if(this.tableroLogico[i+y][j+x] == turno){
+                boolean exist=true;
+                while(exist){
+                    if(i+y2 >=0 && i+y2 <=7 && j+x2 >=0 && j+x2 <=7){
+                        if(this.tableroLogico[i+y2][j+x2] == VACIO){
+                            this.tableroLogico[i+y2][j+x2]= POSIBLE;
+                            exist=false;
+                        }else if(this.tableroLogico[i+y2][j+x2] == turno){
+                            exist=false;
+                        }else{
+                            i=i+y2;
+                            j=j+x2;
+                        }
+
+                    } else{
+                        exist=false;
+                    }
+                }
+
+
+            }
     }
 
 }
