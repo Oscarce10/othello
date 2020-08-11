@@ -32,6 +32,7 @@ public class Tablero extends Observable {
         negras[0][1] = 4;
         negras[1][0] = 4;
         negras[1][1] = 3;
+        args.add(Partida.INICIO);
         args.add(blancas);
         args.add(negras);
         this.setChanged();
@@ -78,6 +79,12 @@ public class Tablero extends Observable {
                     if(i+y2 >=0 && i+y2 <=7 && j+x2 >=0 && j+x2 <=7){
                         if(this.tableroLogico[i+y2][j+x2] == VACIO){
                             this.tableroLogico[i+y2][j+x2]= POSIBLE;
+                            ArrayList <Object> args = new ArrayList<>();
+                            args.add(Partida.AGREGAR_POSIBLE);
+                            args.add(i+y2);
+                            args.add(j+x2);
+                            this.setChanged();
+                            this.notifyObservers(args);
                             exist=false;
                         }else if(this.tableroLogico[i+y2][j+x2] == turno){
                             exist=false;
