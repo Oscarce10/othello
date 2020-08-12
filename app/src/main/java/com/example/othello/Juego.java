@@ -1,4 +1,5 @@
 package com.example.othello;
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
+import com.example.othello.modelo.Ficha;
 import com.example.othello.modelo.Partida;
 import com.example.othello.modelo.Tablero;
 
@@ -27,6 +29,7 @@ public class Juego extends AppCompatActivity implements Observer {
     private Partida obP;
     private Tablero obT;
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +62,8 @@ public class Juego extends AppCompatActivity implements Observer {
                     public boolean onTouch(View view, MotionEvent motionEvent) {
                         if (obT.getTableroLogico()[finalI][finalJ] == Tablero.POSIBLE){
                             obT.agregarFicha(obP.getTurno(), finalI, finalJ);
+                            obT.encerrar(finalI, finalJ, obP.getTurno());
+                            obT.limpiaPosibles();
                             int nuevoTurno = (obP.getTurno()==1)?2:1;
                             obP.setTurno(nuevoTurno);
                             obT.fichasPosibles(obP.getTurno());
@@ -121,6 +126,16 @@ public class Juego extends AppCompatActivity implements Observer {
 
             case Tablero.LIMPIAR:
                 tableroCont.getChildAt((Integer.parseInt(args.get(1).toString()) * 8 ) + (Integer.parseInt(args.get(2).toString()))).setBackgroundResource(R.drawable.tile);
+                break;
+
+            case Tablero.ENCERRAR:
+                for (Ficha ficha: (ArrayList<Ficha>) args.get(1)){
+                    if (Integer.parseInt(args.get(2).toString()) == Partida.TURNO_NEGRAS){
+                        tableroCont.getChildAt((ficha.getY() * 8) + ficha.getX()).setBackgroundResource(R.drawable.ficha_negra);
+                    } else if(Integer.parseInt(args.get(2).toString()) == Partida.TURNO_BLANCAS) {
+                        tableroCont.getChildAt((ficha.getY() * 8) + ficha.getX()).setBackgroundResource(R.drawable.ficha_blanca);
+                    }
+                }
                 break;
         }
 

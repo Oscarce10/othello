@@ -11,6 +11,7 @@ public class Tablero extends Observable {
     public final static int POSIBLE=3;
     public final static int AGREGAR = 4;
     public final static int LIMPIAR = 5;
+    public final static int ENCERRAR = 6;
     private int [][] tableroLogico;
     private  ArrayList <Ficha> cambio;
 
@@ -109,7 +110,6 @@ public class Tablero extends Observable {
 
     public void agregarFicha(int turno, int fila, int columna){
         ArrayList <Object> args = new ArrayList<>();
-        limpiaPosibles();
         this.tableroLogico[fila][columna] = turno;
         args.add(AGREGAR);
         args.add(turno);
@@ -185,6 +185,7 @@ public class Tablero extends Observable {
                 j=j+x;
                 valido=true;
             }else if(this.tableroLogico[i+y][j+x]== VACIO){
+                cambio.clear();
                 exist= false;
                 valido=false;
             }else if(this.tableroLogico[i+y][j+x]== turno){
@@ -197,7 +198,16 @@ public class Tablero extends Observable {
             }
         }
         if(valido){
-            
+            for (Ficha ficha: cambio){
+                System.out.println("f: " + ficha.getY() + " c: " + ficha.getX());
+                tableroLogico[ficha.getY()][ficha.getX()] = turno;
+            }
+            ArrayList <Object> args = new ArrayList<>();
+            args.add(ENCERRAR);
+            args.add(cambio);
+            args.add(turno);
+            this.setChanged();
+            this.notifyObservers(args);
         }
 
 
