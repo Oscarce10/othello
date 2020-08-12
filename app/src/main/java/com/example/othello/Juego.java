@@ -62,8 +62,8 @@ public class Juego extends AppCompatActivity implements Observer {
                     public boolean onTouch(View view, MotionEvent motionEvent) {
                         if (obT.getTableroLogico()[finalI][finalJ] == Tablero.POSIBLE){
                             obT.agregarFicha(obP.getTurno(), finalI, finalJ);
-                            obT.encerrar(finalI, finalJ, obP.getTurno());
                             obT.limpiaPosibles();
+                            obT.encerrar(finalI, finalJ, obP.getTurno());
                             int nuevoTurno = (obP.getTurno()==1)?2:1;
                             obP.setTurno(nuevoTurno);
                             obT.fichasPosibles(obP.getTurno());

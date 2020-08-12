@@ -79,6 +79,7 @@ public class Tablero extends Observable {
     }
 
     public void validar(int x, int y, int i, int j,int turno, int x2, int y2){
+        int oponente = (turno==1)?2:1;
             if(this.tableroLogico[i+y][j+x] == turno){
                 boolean exist=true;
                 while(exist){
@@ -94,9 +95,11 @@ public class Tablero extends Observable {
                             exist=false;
                         }else if(this.tableroLogico[i+y2][j+x2] == turno){
                             exist=false;
-                        }else{
+                        }else if(this.tableroLogico[i+y2][j+x2] ==oponente){
                             i=i+y2;
                             j=j+x2;
+                        }else{
+                            exist=false;
                         }
 
                     } else{
@@ -152,7 +155,7 @@ public class Tablero extends Observable {
                 agregarlista(i, j, -1,-1,turno,oponente);
             }
             if(j+1<=7){
-                agregarlista(i, j, -1,1,turno,oponente);
+                agregarlista(i, j, 1,-1,turno,oponente);
             }
         }
         if(i+1 <=7){
@@ -200,7 +203,7 @@ public class Tablero extends Observable {
         if(valido){
             for (Ficha ficha: cambio){
                 System.out.println("f: " + ficha.getY() + " c: " + ficha.getX());
-                tableroLogico[ficha.getY()][ficha.getX()] = turno;
+                this.tableroLogico[ficha.getY()][ficha.getX()] = turno;
             }
             ArrayList <Object> args = new ArrayList<>();
             args.add(ENCERRAR);
