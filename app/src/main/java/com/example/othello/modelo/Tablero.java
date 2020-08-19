@@ -1,5 +1,7 @@
 package com.example.othello.modelo;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
@@ -27,12 +29,12 @@ public class Tablero extends Observable {
         this.tableroLogico[4][3] = NEGRA;
         this.tableroLogico[4][4] = BLANCA;
         ArrayList<Object> args = new ArrayList<>();
-        int blancas [][] = new int[2][2];
+        int[][] blancas = new int[2][2];
         blancas[0][0] = 3;
         blancas[0][1] = 3;
         blancas[1][0] = 4;
         blancas[1][1] = 4;
-        int negras [][] = new int[2][2];
+        int[][] negras = new int[2][2];
         negras[0][0] = 3;
         negras[0][1] = 4;
         negras[1][0] = 4;
@@ -148,6 +150,7 @@ public class Tablero extends Observable {
     }
 
     public void encerrar(int i, int j, int turno){
+        cambio = new ArrayList<>();
         int oponente = (turno==1)?2:1;
         if(i-1 >=0){
             agregarlista(i, j, 0,-1,turno,oponente);
@@ -177,7 +180,6 @@ public class Tablero extends Observable {
     }
 
     public void agregarlista(int i,int j,int x,int y,int turno,int oponente){
-        cambio = new ArrayList<>();
          boolean exist= true;
          boolean valido= false;
         while(exist){
@@ -202,8 +204,9 @@ public class Tablero extends Observable {
         }
         if(valido){
             for (Ficha ficha: cambio){
-                System.out.println("f: " + ficha.getY() + " c: " + ficha.getX());
-                this.tableroLogico[ficha.getY()][ficha.getX()] = turno;
+
+                System.out.println("f: " + ficha.getX() + " c: " + ficha.getY());
+                this.tableroLogico[ficha.getX()][ficha.getY()] = turno;
             }
             ArrayList <Object> args = new ArrayList<>();
             args.add(ENCERRAR);
@@ -214,6 +217,24 @@ public class Tablero extends Observable {
         }
 
 
+    }
+
+    public int[] totalFichas(){
+        int [] res = new int[2];
+        int blancas =0, negras = 0;
+        for (int[] c: this.tableroLogico){
+            for (int d: c){
+                if (d == Tablero.NEGRA)
+                    negras++;
+                else if (d == Tablero.BLANCA)
+                    blancas++;
+                System.out.print("[" + d + "] ");
+            }
+            System.out.println();
+        }
+        res[0] = blancas;
+        res[1] = negras;
+        return res;
     }
 
 }

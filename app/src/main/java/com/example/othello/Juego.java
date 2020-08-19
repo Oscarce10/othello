@@ -1,25 +1,17 @@
 package com.example.othello;
-import android.annotation.SuppressLint;
-import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.GridLayout;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
-
 import com.example.othello.modelo.Ficha;
 import com.example.othello.modelo.Partida;
 import com.example.othello.modelo.Tablero;
-
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
@@ -29,7 +21,6 @@ public class Juego extends AppCompatActivity implements Observer {
     private Partida obP;
     private Tablero obT;
 
-    @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +36,14 @@ public class Juego extends AppCompatActivity implements Observer {
         this.obT.addObserver(this);
         tableroCont = findViewById(R.id.tableroCont);
         ConstraintLayout tiles [][] = new ConstraintLayout[8][8];
+        final TextView txtTurno = findViewById(R.id.txtTurno);
+        final TextView txtFichasBlancas = findViewById(R.id.txtFichasBlancas);
+        final TextView txtFichasNegras = findViewById(R.id.txtFichasNegras);
+        txtTurno.setText(R.string.turno_negras);
+        txtFichasBlancas.setText(R.string.fichas_blancas);
+        txtFichasBlancas.append("2");
+        txtFichasNegras.setText(R.string.fichas_negras);
+        txtFichasNegras.append("2");
 
         for (int i = 0; i < 8; i++){
             for (int j = 0; j < 8; j++){
@@ -67,14 +66,18 @@ public class Juego extends AppCompatActivity implements Observer {
                             int nuevoTurno = (obP.getTurno()==1)?2:1;
                             obP.setTurno(nuevoTurno);
                             obT.fichasPosibles(obP.getTurno());
+                            txtTurno.setText((obP.getTurno() == Partida.TURNO_NEGRAS)?R.string.turno_negras:R.string.turno_blancas);
+                            int [] fichas = obT.totalFichas();
+                            txtFichasBlancas.setText(R.string.fichas_blancas);
+                            txtFichasBlancas.append(fichas[0] + "");
+                            txtFichasNegras.setText(R.string.fichas_negras);
+                            txtFichasNegras.append("" + fichas[1]);
                         }
-
                         return true;
                     }
                 });
             }
         }
-
         obT.inicioTablero();
         obT.fichasPosibles(obP.getTurno());
     }
@@ -119,7 +122,6 @@ public class Juego extends AppCompatActivity implements Observer {
                          } else {
                              tableroCont.getChildAt((Integer.parseInt(args.get(2).toString()) * 8 ) + (Integer.parseInt(args.get(3).toString()))).setBackgroundResource(R.drawable.ficha_blanca);
                          }
-
                      }
                  });
                  break;

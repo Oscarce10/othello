@@ -77,10 +77,10 @@
                     app:layout_constraintEnd_toEndOf="parent">
 
                     <TextView
+                        android:id="@+id/txtTurno"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/balsamiq_bold"
-                        android:text="Turno blancas"
                         android:textSize="24sp" />
                 </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -100,10 +100,10 @@
                     app:layout_constraintEnd_toEndOf="parent">
 
                     <TextView
+                        android:id="@+id/txtFichasNegras"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/balsamiq_bold"
-                        android:text="Fichas negras: 5"
                         android:textSize="24sp" />
                 </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -123,10 +123,10 @@
                     app:layout_constraintEnd_toEndOf="parent">
 
                     <TextView
+                        android:id="@+id/txtFichasBlancas"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/balsamiq_bold"
-                        android:text="Fichas blancas: 7"
                         android:textSize="24sp" />
                 </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
