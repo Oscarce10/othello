@@ -185,7 +185,7 @@ public class Tablero extends Observable {
         while(exist){
             if(i+y >=0 && i+y <=7 && j+x >=0 && j+x <=7){
             if(this.tableroLogico[i+y][j+x]== oponente){
-                cambio.add(new Ficha(i+y,j+x));
+                cambio.add(new Ficha(j+x, i+y));
                 i=i+y;
                 j=j+x;
                 valido=true;
@@ -204,9 +204,8 @@ public class Tablero extends Observable {
         }
         if(valido){
             for (Ficha ficha: cambio){
-
                 System.out.println("f: " + ficha.getX() + " c: " + ficha.getY());
-                this.tableroLogico[ficha.getX()][ficha.getY()] = turno;
+                this.tableroLogico[ficha.getY()][ficha.getX()] = turno;
             }
             ArrayList <Object> args = new ArrayList<>();
             args.add(ENCERRAR);
