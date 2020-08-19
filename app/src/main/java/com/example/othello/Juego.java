@@ -1,4 +1,5 @@
 package com.example.othello;
+import android.annotation.SuppressLint;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.view.Display;
@@ -12,6 +13,9 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import com.example.othello.modelo.Ficha;
 import com.example.othello.modelo.Partida;
 import com.example.othello.modelo.Tablero;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
@@ -21,6 +25,7 @@ public class Juego extends AppCompatActivity implements Observer {
     private Partida obP;
     private Tablero obT;
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
