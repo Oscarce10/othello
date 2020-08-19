@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
 
             // Signed in successfully, show authenticated UI.
-            startActivity(new Intent(MainActivity.this, Juego.class));
+            startActivity(new Intent(MainActivity.this, Matchmaking.class));
 
         } catch (ApiException e) {
             // The ApiException status code indicates the detailed failure reason.

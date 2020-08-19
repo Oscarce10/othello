@@ -5,6 +5,8 @@ public class Partida {
     public static final int AGREGAR_POSIBLE = 1;
     public static final int TURNO_NEGRAS = 2;
     public static final int TURNO_BLANCAS = 1;
+    private String personId;
+    private String username;
 
 
     Tablero obT;
