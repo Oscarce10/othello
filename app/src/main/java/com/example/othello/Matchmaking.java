@@ -45,9 +45,9 @@ public class Matchmaking extends AppCompatActivity {
 
 
             mDatabase = FirebaseDatabase.getInstance().getReference();
-            mDatabase.child("users").child("personId").setValue(personId);
-            mDatabase.child("users").child("personName").setValue(personName);
-            mDatabase.child("users").child("email").setValue(personEmail);
+            mDatabase.child("users/" + personId).child("personId").setValue(personId);
+            mDatabase.child("users/" + personId).child("personName").setValue(personName);
+            mDatabase.child("users/" + personId).child("email").setValue(personEmail);
 
         }
 
