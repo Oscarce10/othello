@@ -4,7 +4,7 @@
     <string name="turno_blancas">Turno blancas</string>
     <string name="turno_negras">Turno negras</string>
     <string name="fichas_blancas">Fichas blancas: </string>
-    <string name="usuarios_conectados">Usuarios conectados:</string>
+    <string name="usuarios_conectados">Usuarios conectados: %1$d</string>
     <string name="generando_partida">Generando partida…</string>
     <string name="bienvenido">Bienvenido %1$s</string>
 </resources>
