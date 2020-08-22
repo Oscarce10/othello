@@ -1,6 +1,8 @@
 package com.example.othello;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.os.PersistableBundle;
 import android.util.Log;
 import android.widget.TextView;
@@ -11,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.othello.modelo.Jugador;
+import com.example.othello.modelo.Partida;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.firebase.database.ChildEventListener;
@@ -20,13 +23,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.Random;
-
 public class Matchmaking extends AppCompatActivity {
 
     private DatabaseReference mDatabase;
     private DatabaseReference users;
     long conectados = 0;
+    private String personName;
+    private String personEmail;
+    private String personId;
+    private int turno;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -35,18 +40,14 @@ public class Matchmaking extends AppCompatActivity {
 
         GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
         if (acct != null) {
-            String personName = acct.getDisplayName();
-            String personGivenName = acct.getGivenName();
-            String personFamilyName = acct.getFamilyName();
-            String personEmail = acct.getEmail();
-            String personId = acct.getId();
+            personName = acct.getDisplayName();
+            personEmail = acct.getEmail();
+            personId = acct.getId();
             TextView txtView;
             txtView = findViewById(R.id.bienvenido);
             String txt = getString(R.string.bienvenido, personName);
             txtView.setText(txt);
             System.out.println(personName);
-            System.out.println(personGivenName);
-            System.out.println(personFamilyName);
             System.out.println(personEmail);
             System.out.println(personId);
 
@@ -68,7 +69,6 @@ public class Matchmaking extends AppCompatActivity {
                     TextView usuarios_online = findViewById(R.id.usuarios_conectados);
                     String online = String.format(getResources().getString(R.string.usuarios_conectados), conectados);
                     usuarios_online.setText(online);
-
                 }
 
                 @Override
@@ -89,8 +89,14 @@ public class Matchmaking extends AppCompatActivity {
                             TextView usuarios_online = findViewById(R.id.usuarios_conectados);
                             String online = String.format(getResources().getString(R.string.usuarios_conectados), conectados);
                             usuarios_online.setText(online);
-                            if (conectados >= 2){
 
+                            if(conectados == 2){
+                                turno = Integer.parseInt(snapshot.child(personId).child("turno").toString());
+                                Jugador yo = new Jugador(personId, personName, turno);
+                                mDatabase.child("usuarios_disponibles/"+ personId).child("turno_juego").setValue(Partida.TURNO_NEGRAS);
+                                Intent intent = new Intent(Matchmaking.this, Juego.class);
+                                intent.putExtra("yo", (Parcelable) yo);
+                                startActivity(intent);
                             }
                         }
 
@@ -98,6 +104,7 @@ public class Matchmaking extends AppCompatActivity {
                         public void onCancelled(@NonNull DatabaseError error) {
 
                         }
+
                     });
 
 

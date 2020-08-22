@@ -11,10 +11,11 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import com.example.othello.modelo.Ficha;
+import com.example.othello.modelo.Jugador;
 import com.example.othello.modelo.Partida;
 import com.example.othello.modelo.Tablero;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.Observable;
@@ -24,12 +25,15 @@ public class Juego extends AppCompatActivity implements Observer {
     private GridLayout tableroCont;
     private Partida obP;
     private Tablero obT;
+    private DatabaseReference mDatabase;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.juego);
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        Jugador yo = getIntent().getParcelableExtra("yo");
 
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
@@ -44,7 +48,7 @@ public class Juego extends AppCompatActivity implements Observer {
         final TextView txtTurno = findViewById(R.id.txtTurno);
         final TextView txtFichasBlancas = findViewById(R.id.txtFichasBlancas);
         final TextView txtFichasNegras = findViewById(R.id.txtFichasNegras);
-        txtTurno.setText(R.string.turno_negras);
+        txtTurno.setText((yo.getFicha() == Partida.TURNO_NEGRAS)?"Tu turno":"Turno del oponente");
         txtFichasBlancas.setText(R.string.fichas_blancas);
         txtFichasBlancas.append("2");
         txtFichasNegras.setText(R.string.fichas_negras);
