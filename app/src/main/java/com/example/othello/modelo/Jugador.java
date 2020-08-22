@@ -1,6 +1,8 @@
 package com.example.othello.modelo;
 
-public class Jugador {
+import java.io.Serializable;
+
+public class Jugador implements Serializable {
     private String id;
     private String username;
     private int ficha;

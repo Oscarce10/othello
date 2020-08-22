@@ -91,11 +91,11 @@ public class Matchmaking extends AppCompatActivity {
                             usuarios_online.setText(online);
 
                             if(conectados == 2){
-                                turno = Integer.parseInt(snapshot.child(personId).child("turno").toString());
+                                turno = Integer.parseInt(String.valueOf((long) (snapshot.child(personId).child("turno").getValue())));
                                 Jugador yo = new Jugador(personId, personName, turno);
                                 mDatabase.child("usuarios_disponibles/"+ personId).child("turno_juego").setValue(Partida.TURNO_NEGRAS);
                                 Intent intent = new Intent(Matchmaking.this, Juego.class);
-                                intent.putExtra("yo", (Parcelable) yo);
+                                intent.putExtra("yo", yo);
                                 startActivity(intent);
                             }
                         }

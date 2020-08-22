@@ -33,7 +33,7 @@ public class Juego extends AppCompatActivity implements Observer {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.juego);
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        Jugador yo = getIntent().getParcelableExtra("yo");
+        Jugador yo = (Jugador) getIntent().getSerializableExtra("yo");
 
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
