@@ -13,17 +13,20 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.othello.modelo.Jugador;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.Random;
 
 public class Matchmaking extends AppCompatActivity {
 
     private DatabaseReference mDatabase;
     private DatabaseReference users;
+    long conectados = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -55,17 +58,15 @@ public class Matchmaking extends AppCompatActivity {
             mDatabase.child("usuarios_disponibles/" + personId).child("personName").setValue(personName);
             mDatabase.child("usuarios_disponibles/" + personId).child("email").setValue(personEmail);
 
-            users = mDatabase.child("usuarios_disponibles");
-            Query usersQuery = users.orderByChild("usuarios_disponibles/");
-            usersQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+            users = mDatabase.child("usuarios_disponibles/");
+
+
+            users.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot snapshot) {
-                    long c = snapshot.getChildrenCount();
-//                    for (DataSnapshot single: snapshot.getChildren()){
-//                        c++;
-//                    }
+                    conectados = snapshot.getChildrenCount();
                     TextView usuarios_online = findViewById(R.id.usuarios_conectados);
-                    String online = String.format(getResources().getString(R.string.usuarios_conectados), c);
+                    String online = String.format(getResources().getString(R.string.usuarios_conectados), conectados);
                     usuarios_online.setText(online);
 
                 }
@@ -77,21 +78,56 @@ public class Matchmaking extends AppCompatActivity {
             });
 
 
+            users.addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                    users.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            conectados = snapshot.getChildrenCount();
+                            TextView usuarios_online = findViewById(R.id.usuarios_conectados);
+                            String online = String.format(getResources().getString(R.string.usuarios_conectados), conectados);
+                            usuarios_online.setText(online);
+                            if (conectados >= 2){
+
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+
+
+                }
+
+                @Override
+                public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                }
+
+                @Override
+                public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+                    conectados--;
+                    TextView usuarios_online = findViewById(R.id.usuarios_conectados);
+                    String online = String.format(getResources().getString(R.string.usuarios_conectados), conectados);
+                    usuarios_online.setText(online);
+                }
+
+                @Override
+                public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
+
         }
-
-        ValueEventListener postListener = new ValueEventListener() {
-            public void onDataChange(DataSnapshot mDatabase) {
-                // Get Post object and use the values to update the UI
-
-                Jugador jugador = mDatabase.child("users").getValue(Jugador.class);
-                // ...
-            }
-            public void onCancelled(DatabaseError databaseError) {
-                // Getting Post failed, log a message
-                Log.w("ERROR", "loadPost:onCancelled", databaseError.toException());
-            }
-        };
-        //mPostReference.addValueEventListener(postListener);
-
     }
 }
