@@ -58,6 +58,7 @@ public class Matchmaking extends AppCompatActivity {
             mDatabase.child("usuarios_disponibles/" + personId).child("personId").setValue(personId);
             mDatabase.child("usuarios_disponibles/" + personId).child("personName").setValue(personName);
             mDatabase.child("usuarios_disponibles/" + personId).child("email").setValue(personEmail);
+            mDatabase.child("usuarios_disponibles/"+ personId).child("turno_juego").setValue(Partida.TURNO_NEGRAS);
 
             users = mDatabase.child("usuarios_disponibles/");
 
@@ -91,9 +92,13 @@ public class Matchmaking extends AppCompatActivity {
                             usuarios_online.setText(online);
 
                             if(conectados == 2){
-                                turno = Integer.parseInt(String.valueOf((long) (snapshot.child(personId).child("turno").getValue())));
+                                try {
+                                    Thread.sleep(5000);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
                                 Jugador yo = new Jugador(personId, personName, turno);
-                                mDatabase.child("usuarios_disponibles/"+ personId).child("turno_juego").setValue(Partida.TURNO_NEGRAS);
+                                turno = Integer.parseInt(String.valueOf((long) (snapshot.child(personId).child("turno").getValue())));
                                 Intent intent = new Intent(Matchmaking.this, Juego.class);
                                 intent.putExtra("yo", yo);
                                 startActivity(intent);
