@@ -90,18 +90,13 @@ public class Matchmaking extends AppCompatActivity {
                             TextView usuarios_online = findViewById(R.id.usuarios_conectados);
                             String online = String.format(getResources().getString(R.string.usuarios_conectados), conectados);
                             usuarios_online.setText(online);
-
-                            if(conectados == 2){
+                            if (conectados == 2){
                                 try {
-                                    Thread.sleep(5000);
+                                    Thread.sleep(2000);
                                 } catch (InterruptedException e) {
                                     e.printStackTrace();
                                 }
-                                Jugador yo = new Jugador(personId, personName, turno);
-                                turno = Integer.parseInt(String.valueOf((long) (snapshot.child(personId).child("turno").getValue())));
-                                Intent intent = new Intent(Matchmaking.this, Juego.class);
-                                intent.putExtra("yo", yo);
-                                startActivity(intent);
+                                generarPartida();
                             }
                         }
 
@@ -139,7 +134,27 @@ public class Matchmaking extends AppCompatActivity {
                 }
             });
 
-
         }
+    }
+
+    public void generarPartida(){
+        mDatabase.child("usuarios_disponibles/").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                System.out.println(snapshot.child(personId));
+                System.out.println(snapshot.child(personId).child("turno").toString());
+                System.out.println(snapshot.child(personId).child("turno").getValue());
+                turno = Integer.parseInt(String.valueOf((long) (snapshot.child(personId).child("turno").getValue())));
+                Jugador yo = new Jugador(personId, personName, turno);
+                Intent intent = new Intent(Matchmaking.this, Juego.class);
+                intent.putExtra("yo", yo);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 }
