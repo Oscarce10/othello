@@ -8,14 +8,22 @@ import android.view.View;
 import android.widget.GridLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+
+import com.example.othello.modelo.Database;
 import com.example.othello.modelo.Ficha;
 import com.example.othello.modelo.Jugador;
 import com.example.othello.modelo.Partida;
 import com.example.othello.modelo.Tablero;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Observable;
@@ -26,15 +34,13 @@ public class Juego extends AppCompatActivity implements Observer {
     private Partida obP;
     private Tablero obT;
     private DatabaseReference mDatabase;
-
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.juego);
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        Jugador yo = (Jugador) getIntent().getSerializableExtra("yo");
-
+        final Jugador yo = (Jugador) getIntent().getSerializableExtra("yo");
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
@@ -67,28 +73,59 @@ public class Juego extends AppCompatActivity implements Observer {
                 final int finalJ = j;
                 tiles[i][j].setOnTouchListener(new View.OnTouchListener() {
                     @Override
-                    public boolean onTouch(View view, MotionEvent motionEvent) {
+                    public boolean onTouch(View view, final MotionEvent motionEvent) {
                         if (obT.getTableroLogico()[finalI][finalJ] == Tablero.POSIBLE){
-                            obT.agregarFicha(obP.getTurno(), finalI, finalJ);
-                            obT.limpiaPosibles();
-                            obT.encerrar(finalI, finalJ, obP.getTurno());
-                            int nuevoTurno = (obP.getTurno()==1)?2:1;
-                            obP.setTurno(nuevoTurno);
-                            obT.fichasPosibles(obP.getTurno());
-                            txtTurno.setText((obP.getTurno() == Partida.TURNO_NEGRAS)?R.string.turno_negras:R.string.turno_blancas);
-                            int [] fichas = obT.totalFichas();
-                            txtFichasBlancas.setText(R.string.fichas_blancas);
-                            txtFichasBlancas.append(fichas[0] + "");
-                            txtFichasNegras.setText(R.string.fichas_negras);
-                            txtFichasNegras.append("" + fichas[1]);
+                            mDatabase.child("usuarios_disponibles").child("partida").child(("cordenada")).setValue(""+finalI+""+finalJ);
                         }
                         return true;
+                    }
+                });
+                mDatabase.child("usuarios_disponibles").child("partida").child("coordenada").addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                        String coordenada = (String) snapshot.getValue();
+                        int i = Character.getNumericValue(coordenada.charAt(0));
+                        int j = Character.getNumericValue(coordenada.charAt(1));
+                        obT.agregarFicha(obP.getTurno(), i, j);
+                        obT.limpiaPosibles();
+                        obT.encerrar(i, j, obP.getTurno());
+                        obP.setTurno((obP.getTurno()==1)?2:1);
+                        if (obP.getTurno() == yo.getFicha()){
+                            obT.fichasPosibles(obP.getTurno());
+                        }
+                        int [] fichas = obT.totalFichas();
+                        txtFichasBlancas.setText(R.string.fichas_blancas);
+                        txtFichasBlancas.append(fichas[0] + "");
+                        txtFichasNegras.setText(R.string.fichas_negras);
+                        txtFichasNegras.append("" + fichas[1]);
+                        txtTurno.setText((yo.getFicha() == obP.getTurno())?"Tu turno":"Turno del oponente");
+                    }
+
+                    @Override
+                    public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                    }
+
+                    @Override
+                    public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+                    }
+
+                    @Override
+                    public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
                     }
                 });
             }
         }
         obT.inicioTablero();
-        obT.fichasPosibles(obP.getTurno());
+        if(yo.getFicha() == Partida.TURNO_NEGRAS)
+            obT.fichasPosibles(obP.getTurno());
     }
 
     @Override

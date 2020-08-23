@@ -7,8 +7,6 @@ public class Partida {
     public static final int TURNO_BLANCAS = 1;
     private String personId;
     private String username;
-
-
     Tablero obT;
     private int turno;
 

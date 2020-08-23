@@ -47,11 +47,6 @@ public class Matchmaking extends AppCompatActivity {
             txtView = findViewById(R.id.bienvenido);
             String txt = getString(R.string.bienvenido, personName);
             txtView.setText(txt);
-            System.out.println(personName);
-            System.out.println(personEmail);
-            System.out.println(personId);
-
-
 
             mDatabase = FirebaseDatabase.getInstance().getReference();
 
@@ -141,9 +136,6 @@ public class Matchmaking extends AppCompatActivity {
         mDatabase.child("usuarios_disponibles/").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                System.out.println(snapshot.child(personId));
-                System.out.println(snapshot.child(personId).child("turno").toString());
-                System.out.println(snapshot.child(personId).child("turno").getValue());
                 turno = Integer.parseInt(String.valueOf((long) (snapshot.child(personId).child("turno").getValue())));
                 Jugador yo = new Jugador(personId, personName, turno);
                 Intent intent = new Intent(Matchmaking.this, Juego.class);
