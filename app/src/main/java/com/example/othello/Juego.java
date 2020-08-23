@@ -75,15 +75,17 @@ public class Juego extends AppCompatActivity implements Observer {
                     @Override
                     public boolean onTouch(View view, final MotionEvent motionEvent) {
                         if (obT.getTableroLogico()[finalI][finalJ] == Tablero.POSIBLE){
-                            mDatabase.child("usuarios_disponibles").child("partida").child(("cordenada")).setValue(""+finalI+""+finalJ);
+                            mDatabase.child("partida").child(("coordenada")).setValue(""+finalI+""+finalJ);
                         }
                         return true;
                     }
                 });
-                mDatabase.child("usuarios_disponibles").child("partida").child("coordenada").addChildEventListener(new ChildEventListener() {
+                mDatabase.child("partida").addChildEventListener(new ChildEventListener() {
                     @Override
                     public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                        System.out.println(snapshot);
                         String coordenada = (String) snapshot.getValue();
+                        System.out.println("COORDENADA: " + coordenada);
                         int i = Character.getNumericValue(coordenada.charAt(0));
                         int j = Character.getNumericValue(coordenada.charAt(1));
                         obT.agregarFicha(obP.getTurno(), i, j);
@@ -103,7 +105,7 @@ public class Juego extends AppCompatActivity implements Observer {
 
                     @Override
                     public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
+                        System.out.println("Entro a changed");
                     }
 
                     @Override
