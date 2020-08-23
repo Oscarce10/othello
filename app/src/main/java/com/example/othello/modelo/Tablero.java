@@ -204,7 +204,6 @@ public class Tablero extends Observable {
         }
         if(valido){
             for (Ficha ficha: cambio){
-                System.out.println("f: " + ficha.getX() + " c: " + ficha.getY());
                 this.tableroLogico[ficha.getY()][ficha.getX()] = turno;
             }
             ArrayList <Object> args = new ArrayList<>();
@@ -227,9 +226,7 @@ public class Tablero extends Observable {
                     negras++;
                 else if (d == Tablero.BLANCA)
                     blancas++;
-                System.out.print("[" + d + "] ");
             }
-            System.out.println();
         }
         res[0] = blancas;
         res[1] = negras;

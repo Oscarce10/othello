@@ -80,54 +80,70 @@ public class Juego extends AppCompatActivity implements Observer {
                         return true;
                     }
                 });
-                mDatabase.child("partida").addChildEventListener(new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                        System.out.println(snapshot);
-                        String coordenada = (String) snapshot.getValue();
-                        System.out.println("COORDENADA: " + coordenada);
-                        int i = Character.getNumericValue(coordenada.charAt(0));
-                        int j = Character.getNumericValue(coordenada.charAt(1));
-                        obT.agregarFicha(obP.getTurno(), i, j);
-                        obT.limpiaPosibles();
-                        obT.encerrar(i, j, obP.getTurno());
-                        obP.setTurno((obP.getTurno()==1)?2:1);
-                        if (obP.getTurno() == yo.getFicha()){
-                            obT.fichasPosibles(obP.getTurno());
-                        }
-                        int [] fichas = obT.totalFichas();
-                        txtFichasBlancas.setText(R.string.fichas_blancas);
-                        txtFichasBlancas.append(fichas[0] + "");
-                        txtFichasNegras.setText(R.string.fichas_negras);
-                        txtFichasNegras.append("" + fichas[1]);
-                        txtTurno.setText((yo.getFicha() == obP.getTurno())?"Tu turno":"Turno del oponente");
-                    }
 
-                    @Override
-                    public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                        System.out.println("Entro a changed");
-                    }
-
-                    @Override
-                    public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-
-                    }
-
-                    @Override
-                    public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
             }
         }
         obT.inicioTablero();
         if(yo.getFicha() == Partida.TURNO_NEGRAS)
             obT.fichasPosibles(obP.getTurno());
+        mDatabase.child("partida").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                String coordenada = (String) snapshot.getValue();
+                int i = Character.getNumericValue(coordenada.charAt(0));
+                int j = Character.getNumericValue(coordenada.charAt(1));
+                obT.agregarFicha(obP.getTurno(), i, j);
+                obT.limpiaPosibles();
+                obT.encerrar(i, j, obP.getTurno());
+                obP.setTurno((obP.getTurno()==1)?2:1);
+                System.out.println("TURNO ACTUAL: " + obP.getTurno());
+                if (obP.getTurno() == yo.getFicha()){
+                    obT.fichasPosibles(obP.getTurno());
+                }
+                int [] fichas = obT.totalFichas();
+                txtFichasBlancas.setText(R.string.fichas_blancas);
+                txtFichasBlancas.append(fichas[0] + "");
+                txtFichasNegras.setText(R.string.fichas_negras);
+                txtFichasNegras.append("" + fichas[1]);
+                txtTurno.setText((yo.getFicha() == obP.getTurno())?"Tu turno":"Turno del oponente");
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                String coordenada = (String) snapshot.getValue();
+                int i = Character.getNumericValue(coordenada.charAt(0));
+                int j = Character.getNumericValue(coordenada.charAt(1));
+                obT.agregarFicha(obP.getTurno(), i, j);
+                obT.limpiaPosibles();
+                obT.encerrar(i, j, obP.getTurno());
+                obP.setTurno((obP.getTurno()==1)?2:1);
+                System.out.println("TURNO ACTUAL: " + obP.getTurno());
+                if (obP.getTurno() == yo.getFicha()){
+                    obT.fichasPosibles(obP.getTurno());
+                }
+                int [] fichas = obT.totalFichas();
+                txtFichasBlancas.setText(R.string.fichas_blancas);
+                txtFichasBlancas.append(fichas[0] + "");
+                txtFichasNegras.setText(R.string.fichas_negras);
+                txtFichasNegras.append("" + fichas[1]);
+                txtTurno.setText((yo.getFicha() == obP.getTurno())?"Tu turno":"Turno del oponente");
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     @Override
