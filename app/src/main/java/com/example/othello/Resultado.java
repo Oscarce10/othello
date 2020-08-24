@@ -29,7 +29,7 @@ public class Resultado extends AppCompatActivity {
         Button btn_inicio = findViewById(R.id.btn_inicio);
         Button btn_salir = findViewById(R.id.btn_salir);
         int contFichas = (yo.getFicha() == Tablero.NEGRA) ? 1 : 0;
-        int contFichasOp = (yo.getFicha() == Tablero.BLANCA) ? 0 : 1;
+        int contFichasOp = (contFichas == 1) ? 0 : 1;
 
         btn_inicio.setOnClickListener(new View.OnClickListener() {
             @Override
