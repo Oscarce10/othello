@@ -183,7 +183,7 @@ public class Tablero extends Observable {
          boolean exist= true;
          boolean valido= false;
         while(exist){
-            if(i+y >=0 && i+y <=7 && j+x >=0 && j+x <=7){
+            if((i+y >=0 && i+y <=7) && (j+x >=0 && j+x <=7)){
             if(this.tableroLogico[i+y][j+x]== oponente){
                 cambio.add(new Ficha(j+x, i+y));
                 i=i+y;
@@ -197,12 +197,13 @@ public class Tablero extends Observable {
                 exist=false;
             }
 
-            }else{
-                exist=false;
+            }else if((i+y <0 || i+y >7) || (j+x <0 || j+x >7)){
                 valido=false;
+                cambio.clear();
+                exist=false;
             }
         }
-        if(valido){
+        if(valido == true){
             for (Ficha ficha: cambio){
                 this.tableroLogico[ficha.getY()][ficha.getX()] = turno;
             }

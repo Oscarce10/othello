@@ -13,7 +13,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
-import com.example.othello.modelo.Database;
 import com.example.othello.modelo.Ficha;
 import com.example.othello.modelo.Jugador;
 import com.example.othello.modelo.Partida;
