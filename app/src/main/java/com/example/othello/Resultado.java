@@ -29,10 +29,15 @@ public class Resultado extends AppCompatActivity {
         Button btn_inicio = findViewById(R.id.btn_inicio);
         Button btn_salir = findViewById(R.id.btn_salir);
         int contFichas = (yo.getFicha() == Tablero.NEGRA) ? 1 : 0;
+        int contFichasOp = (yo.getFicha() == Tablero.BLANCA) ? 0 : 1;
 
         btn_inicio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mDatabase = FirebaseDatabase.getInstance().getReference();
+                finishActivity(0);
+                mDatabase.child("partida").setValue(null);
+                mDatabase.child("usuarios_disponibles").setValue(null);
                 startActivity(new Intent(Resultado.this, MainActivity.class));
             }
         });
@@ -42,8 +47,7 @@ public class Resultado extends AppCompatActivity {
             resultado.setText("EMPATE");
             resultado.setTextColor(Color.parseColor("#FF7E39"));
         } else {
-
-            if (fichas[contFichas] > 32 ){
+            if (fichas[contFichas] > fichas[contFichasOp] ){
                 resultado.setText("GANASTE");
                 resultado.setTextColor(Color.parseColor("#69C33B"));
             } else {
@@ -53,9 +57,5 @@ public class Resultado extends AppCompatActivity {
         }
 
         fichas_finales.setText("Fichas finales: " + fichas[contFichas]);
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-        mDatabase.child("partida").setValue(null);
-        mDatabase.child("usuarios_disponibles").setValue(null);
-
     }
 }

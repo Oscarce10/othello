@@ -112,7 +112,7 @@ public class Juego extends AppCompatActivity implements Observer {
             @Override
             public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 String coordenada = (String) snapshot.getValue();
-                if (!coordenada.equals("esperando")){
+                if (!coordenada.contains("esperando")){
                     int i = Character.getNumericValue(coordenada.charAt(0));
                     int j = Character.getNumericValue(coordenada.charAt(1));
                     obT.agregarFicha(obP.getTurno(), i, j);
@@ -135,11 +135,16 @@ public class Juego extends AppCompatActivity implements Observer {
                         startActivity(intent);
                     }
                     if (obP.getTurno() == yo.getFicha() && fichas[2] == 0){
-                        mDatabase.child("partida").child("coordenada").setValue("esperando");
+                        mDatabase.child("partida").child("coordenada").setValue("esperando " + yo.getUsername());
                     }
                     txtTurno.setText((yo.getFicha() == obP.getTurno())?"Tu turno":"Turno del oponente");
                     txtTurno.setText((yo.getFicha() == obP.getTurno())?"Tu turno":"Turno del oponente");
                 } else {
+                    try {
+                        Thread.sleep(5000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                     int [] fichas = obT.totalFichas();
                     Intent intent = new Intent(Juego.this, Resultado.class);
                     intent.putExtra("yo", yo);

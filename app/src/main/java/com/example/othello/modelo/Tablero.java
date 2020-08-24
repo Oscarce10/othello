@@ -1,9 +1,5 @@
 package com.example.othello.modelo;
-
-import android.util.Log;
-
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Observable;
 
 public class Tablero extends Observable {
