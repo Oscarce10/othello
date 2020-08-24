@@ -105,35 +105,48 @@ public class Juego extends AppCompatActivity implements Observer {
                 txtFichasBlancas.append(fichas[0] + "");
                 txtFichasNegras.setText(R.string.fichas_negras);
                 txtFichasNegras.append("" + fichas[1]);
-                if (fichas[0] + fichas [1] == 64){
-                    Intent intent = new Intent(Juego.this, Resultado.class);
-                    intent.putExtra("yo", yo);
-                    intent.putExtra("fichas", fichas);
-                    startActivity(intent);
-                }
-                txtTurno.setText((yo.getFicha() == obP.getTurno())?"Tu turno":"Turno del oponente");
+                System.out.println(fichas[0] + fichas [1]);
+
             }
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 String coordenada = (String) snapshot.getValue();
-                int i = Character.getNumericValue(coordenada.charAt(0));
-                int j = Character.getNumericValue(coordenada.charAt(1));
-                obT.agregarFicha(obP.getTurno(), i, j);
-                obT.limpiaPosibles();
-                obT.encerrar(i, j, obP.getTurno());
-                obP.setTurno((obP.getTurno()==1)?2:1);
-                System.out.println("TURNO ACTUAL: " + obP.getTurno());
-                if (obP.getTurno() == yo.getFicha()){
-                    obT.fichasPosibles(obP.getTurno());
+                if (!coordenada.equals("esperando")){
+                    int i = Character.getNumericValue(coordenada.charAt(0));
+                    int j = Character.getNumericValue(coordenada.charAt(1));
+                    obT.agregarFicha(obP.getTurno(), i, j);
+                    obT.limpiaPosibles();
+                    obT.encerrar(i, j, obP.getTurno());
+                    obP.setTurno((obP.getTurno()==1)?2:1);
+                    System.out.println("TURNO ACTUAL: " + obP.getTurno());
+                    if (obP.getTurno() == yo.getFicha()){
+                        obT.fichasPosibles(obP.getTurno());
+                    }
+                    int [] fichas = obT.totalFichas();
+                    txtFichasBlancas.setText(R.string.fichas_blancas);
+                    txtFichasBlancas.append(fichas[0] + "");
+                    txtFichasNegras.setText(R.string.fichas_negras);
+                    txtFichasNegras.append("" + fichas[1]);
+                    if (fichas[0] + fichas [1] == 64){
+                        Intent intent = new Intent(Juego.this, Resultado.class);
+                        intent.putExtra("yo", yo);
+                        intent.putExtra("fichas", fichas);
+                        startActivity(intent);
+                    }
+                    if (obP.getTurno() == yo.getFicha() && fichas[2] == 0){
+                        mDatabase.child("partida").child("coordenada").setValue("esperando");
+                    }
+                    txtTurno.setText((yo.getFicha() == obP.getTurno())?"Tu turno":"Turno del oponente");
+                    txtTurno.setText((yo.getFicha() == obP.getTurno())?"Tu turno":"Turno del oponente");
+                } else {
+                    int [] fichas = obT.totalFichas();
+                    Intent intent = new Intent(Juego.this, Resultado.class);
+                    intent.putExtra("yo", yo);
+                    intent.putExtra("fichas", fichas);
+                    startActivity(intent);
                 }
-                int [] fichas = obT.totalFichas();
-                txtFichasBlancas.setText(R.string.fichas_blancas);
-                txtFichasBlancas.append(fichas[0] + "");
-                txtFichasNegras.setText(R.string.fichas_negras);
-                txtFichasNegras.append("" + fichas[1]);
 
-                txtTurno.setText((yo.getFicha() == obP.getTurno())?"Tu turno":"Turno del oponente");
             }
 
             @Override

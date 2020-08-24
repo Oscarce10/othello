@@ -219,19 +219,23 @@ public class Tablero extends Observable {
     }
 
     public int[] totalFichas(){
-        int [] res = new int[2];
-        int blancas =0, negras = 0;
+        int [] res = new int[3];
+        int blancas = 0, negras = 0, posibles = 0;
         for (int[] c: this.tableroLogico){
             for (int d: c){
                 if (d == Tablero.NEGRA)
                     negras++;
                 else if (d == Tablero.BLANCA)
                     blancas++;
+                else if (d == Tablero.POSIBLE)
+                    posibles++;
             }
         }
         res[0] = blancas;
         res[1] = negras;
+        res[2] = posibles;
         return res;
     }
+
 
 }
