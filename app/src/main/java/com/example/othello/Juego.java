@@ -140,11 +140,6 @@ public class Juego extends AppCompatActivity implements Observer {
                     txtTurno.setText((yo.getFicha() == obP.getTurno())?"Tu turno":"Turno del oponente");
                     txtTurno.setText((yo.getFicha() == obP.getTurno())?"Tu turno":"Turno del oponente");
                 } else {
-                    try {
-                        Thread.sleep(5000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
                     int [] fichas = obT.totalFichas();
                     Intent intent = new Intent(Juego.this, Resultado.class);
                     intent.putExtra("yo", yo);
