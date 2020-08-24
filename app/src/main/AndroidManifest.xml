@@ -22,6 +22,8 @@
         </activity>
         <activity android:name=".Matchmaking">
         </activity>
+        <activity android:name=".Resultado">
+        </activity>
     </application>
 
 </manifest>

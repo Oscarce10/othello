@@ -1,5 +1,6 @@
 package com.example.othello;
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.view.Display;
@@ -104,6 +105,12 @@ public class Juego extends AppCompatActivity implements Observer {
                 txtFichasBlancas.append(fichas[0] + "");
                 txtFichasNegras.setText(R.string.fichas_negras);
                 txtFichasNegras.append("" + fichas[1]);
+                if (fichas[0] + fichas [1] == 64){
+                    Intent intent = new Intent(Juego.this, Resultado.class);
+                    intent.putExtra("yo", yo);
+                    intent.putExtra("fichas", fichas);
+                    startActivity(intent);
+                }
                 txtTurno.setText((yo.getFicha() == obP.getTurno())?"Tu turno":"Turno del oponente");
             }
 
@@ -125,6 +132,7 @@ public class Juego extends AppCompatActivity implements Observer {
                 txtFichasBlancas.append(fichas[0] + "");
                 txtFichasNegras.setText(R.string.fichas_negras);
                 txtFichasNegras.append("" + fichas[1]);
+
                 txtTurno.setText((yo.getFicha() == obP.getTurno())?"Tu turno":"Turno del oponente");
             }
 
