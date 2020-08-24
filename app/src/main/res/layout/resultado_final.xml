@@ -145,6 +145,15 @@
             android:textSize="30sp"
             android:fontFamily="@font/modak"
             android:gravity="center"/>
+        <TextView
+            android:id="@+id/fichas_totales"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:gravity="center"
+            android:text="Fichas finales: 18"
+            android:fontFamily="@font/modak"
+            android:textColor="#242526"/>
         <Button
             android:id="@+id/btn_inicio"
             android:layout_width="match_parent"
