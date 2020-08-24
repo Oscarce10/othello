@@ -1,7 +1,9 @@
 package com.example.othello;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -11,8 +13,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.othello.modelo.Jugador;
 import com.example.othello.modelo.Partida;
 import com.example.othello.modelo.Tablero;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class Resultado extends AppCompatActivity {
+    private DatabaseReference mDatabase;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,6 +29,13 @@ public class Resultado extends AppCompatActivity {
         Button btn_inicio = findViewById(R.id.btn_inicio);
         Button btn_salir = findViewById(R.id.btn_salir);
         int contFichas = (yo.getFicha() == Tablero.NEGRA) ? 1 : 0;
+
+        btn_inicio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(Resultado.this, MainActivity.class));
+            }
+        });
 
 
         if (fichas[0] == fichas[1]){
@@ -41,6 +53,9 @@ public class Resultado extends AppCompatActivity {
         }
 
         fichas_finales.setText("Fichas finales: " + fichas[contFichas]);
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabase.child("partida").setValue(null);
+        mDatabase.child("usuarios_disponibles").setValue(null);
 
     }
 }
